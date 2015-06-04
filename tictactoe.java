@@ -3,7 +3,6 @@ import java.util.*;
 public class TicTacToe {
 
 	HashMap<String, Double> potatoes;
-
 	public TicTacToe() {
 		potatoes = new HashMap<String, Double>();
 		for (int i = 0; i < 19683; i++) {
@@ -17,7 +16,6 @@ public class TicTacToe {
 			while (ternaryNum.length() < 9) {
 				ternaryNum = "0" + ternaryNum;
 			}
-			System.out.println(ternaryNum);
 			potatoes.put(ternaryNum, 1.0);
 		}
 		legDay();
@@ -36,6 +34,33 @@ public class TicTacToe {
 	}
 
 	private boolean gameOver(String board) {
+		if (board.substring(0, 3).equals("111") || board.substring(0, 3).equals("222") ||
+			board.substring(3,6).equals("111") || board.substring(3,6).equals("222") ||
+			board.substring(6,9).equals("111") || board.substring(6,9).equals("222")) {	
+			return true;
+		}
+		if ((board.charAt(0) == '1' && board.charAt(4) == '1' && board.charAt(8) == '1') ||
+			(board.charAt(0) == '1' && board.charAt(3) == '1' && board.charAt(6) == '1') ||
+			(board.charAt(1) == '1' && board.charAt(4) == '1' && board.charAt(7) == '1') ||
+			(board.charAt(2) == '1' && board.charAt(5) == '1' && board.charAt(8) == '1') ||
+			(board.charAt(2) == '1' && board.charAt(4) == '1' && board.charAt(6) == '1')) {
+			return true;
+		}
+		if ((board.charAt(0) == '2' && board.charAt(4) == '2' && board.charAt(8) == '2') ||
+			(board.charAt(0) == '2' && board.charAt(3) == '2' && board.charAt(6) == '2') ||
+			(board.charAt(1) == '2' && board.charAt(4) == '2' && board.charAt(7) == '2') ||
+			(board.charAt(2) == '2' && board.charAt(5) == '2' && board.charAt(8) == '2') ||
+			(board.charAt(2) == '2' && board.charAt(4) == '2' && board.charAt(6) == '2')) {
+			return true;
+		}
+		for (int i = 0; i < board.length(); i++) {
+			if (board.charAt(i) == '0') {
+				return false;
+			}
+			if (i == board.length() - 1) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -47,12 +72,12 @@ public class TicTacToe {
 		String boardState = "000000000";
 		int index;
 		while (true) {
-			prompt(boardState);
+			newGame.prompt(boardState);
 			index = StdIn.readInt();
 			String newState = boardState.substring(0,index) + '1' + 
 									boardState.substring(index + 1);
-			boardState = response(newState);
-			if (gameOver(boardState)) {
+			boardState = newGame.response(newState);
+			if (newGame.gameOver(boardState)) {
 				StdOut.println("Game Over, let's play again!");
 				boardState = "000000000";
 			}
