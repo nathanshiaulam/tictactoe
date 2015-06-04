@@ -4,7 +4,7 @@ public class TicTacToe {
 
 
 	public TicTacToe() {
-		
+		//penis 
 	}
 
 	private int response(String board) {
@@ -20,7 +20,7 @@ public class TicTacToe {
 	}
 
 	private void legDay() {
-		
+
 	}
 	public static void main(String[] argv) {
 
