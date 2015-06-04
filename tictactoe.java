@@ -19,7 +19,6 @@ public class TicTacToe {
 			potatoes.put(ternaryNum, 1.0);
 		}
 		legDay();
-		System.out.println(potatoes.get("100020100"));
 	}
 
 	private String response(String board) {
@@ -27,9 +26,9 @@ public class TicTacToe {
 		int count = 0;
 		for (int i = 0; i < 9; i++) {
 			double weight = 0.0;
-			if (board.charAt(i) == 0) {
-				weight = potatoes.get(Integer.parseInt(board.substring(0,i) 
-											 + '2' + board.substring(i + 1)));
+			if (board.charAt(i) == '0') {
+				weight = potatoes.get(board.substring(0,i) 
+											 + '2' + board.substring(i + 1));
 			}
 			if (weight >= max) {
 				if (weight > max)
@@ -39,18 +38,19 @@ public class TicTacToe {
 				max = weight;
 			}
 		}
-		if (max == 0)
+		if (max == 0.0)
 			return "111111111";
+
 		Random rand = new Random();
 
-		int choice = rand.nextInt(count + 1);
+		int choice = rand.nextInt(count);
 
 		int number = 0;
 		for (int i = 0; i < 9; i++) {
-			if (board.charAt(i) == 0) {
+			if (board.charAt(i) == '0') {
 				String newBoard = board.substring(0,i) + '2' + 
 								  		board.substring(i + 1);
-				if (potatoes.get(Integer.parseInt(newBoard)) == max) {
+				if (potatoes.get(newBoard) == max) {
 					if (number == choice)
 						return newBoard;
 					number++;
