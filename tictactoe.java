@@ -25,7 +25,41 @@ public class TicTacToe {
 	}
 
 	private String response(String board) {
-		return ""; 
+		double max = 0.0;
+		int count = 0;
+		for (int i = 0; i < 9; i++) {
+			double weight = 0.0;
+			if (board.charAt(i) == 0) {
+				weight = potatoes.get(Integer.parseInt(board.substring(0,i) 
+											 + '2' + board.substring(i + 1)));
+			}
+			if (weight >= max) {
+				if (weight > max)
+					count = 1;
+				else 
+					count++;
+				max = weight;
+			}
+		}
+		if (max == 0)
+			return "111111111";
+		Random rand = new Random();
+
+		int choice = rand.nextInt(count + 1);
+
+		int number = 0;
+		for (int i = 0; i < 9; i++) {
+			if (board.charAt(i) == 0) {
+				String newBoard = board.substring(0,i) + '2' + 
+								  		board.substring(i + 1);
+				if (potatoes.get(Integer.parseInt(newBoard)) == max) {
+					if (number == choice)
+						return newBoard;
+					number++;
+				}
+			}
+		}
+		return "999999999"; 
 	}
 
 	private void prompt(String board) {
@@ -47,12 +81,12 @@ public class TicTacToe {
 		String boardState = "000000000";
 		int index;
 		while (true) {
-			prompt(boardState);
+			newGame.prompt(boardState);
 			index = StdIn.readInt();
 			String newState = boardState.substring(0,index) + '1' + 
 									boardState.substring(index + 1);
-			boardState = response(newState);
-			if (gameOver(boardState)) {
+			boardState = newGame.response(newState);
+			if (newGame.gameOver(boardState)) {
 				StdOut.println("Game Over, let's play again!");
 				boardState = "000000000";
 			}
