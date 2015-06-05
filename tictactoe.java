@@ -3,8 +3,10 @@ import java.util.*;
 public class TicTacToe {
 
 	HashMap<String, Double> potatoes;
+	ArrayList<String> movesMade;
 	public TicTacToe() {
 		potatoes = new HashMap<String, Double>();
+		movesMade = new ArrayList<String>();
 		for (int i = 0; i < 19683; i++) {
 			String ternaryNum = "";
 			int number = i;
@@ -38,8 +40,7 @@ public class TicTacToe {
 				max = weight;
 			}
 		}
-		if (max == 0.0)
-			return "111111111";
+		System.out.println("Max: " + max);
 
 		Random rand = new Random();
 		int choice = rand.nextInt(count);
@@ -50,8 +51,10 @@ public class TicTacToe {
 				String newBoard = board.substring(0,i) + '2' + 
 								  		board.substring(i + 1);
 				if (potatoes.get(newBoard) == max) {
-					if (number == choice)
+					if (number == choice) {
+						movesMade.add(newBoard);
 						return newBoard;
+					}
 					number++;
 				}
 			}
@@ -66,10 +69,27 @@ public class TicTacToe {
 		StdOut.println("Your move, bitch.");
 	}
 
+	private void decayBoard(ArrayList<String> moves) {
+		for (String s : moves) {
+			potatoes.put(s, potatoes.get(s) * .9);
+		}
+	}
+
+	private void increaseBoard(ArrayList<String> moves) {
+		for (String s : moves) {
+			//potatoes.put(s, potatoes.get(s) * 1.11);
+		}
+	}
+
 	private boolean gameOver(String board) {
-		if (board.substring(0, 3).equals("111") || board.substring(0, 3).equals("222") ||
-			board.substring(3,6).equals("111") || board.substring(3,6).equals("222") ||
-			board.substring(6,9).equals("111") || board.substring(6,9).equals("222")) {	
+		// We win.
+		if (board.substring(0, 3).equals("111") || 
+			board.substring(3,6).equals("111") || 
+			board.substring(6,9).equals("111")) {	
+			decayBoard(movesMade);
+			potatoes.put(movesMade.get(movesMade.size() - 1), 0.0); 
+			System.out.print("Player 1 wins! ");
+			movesMade = new ArrayList<String>();
 			return true;
 		}
 		if ((board.charAt(0) == '1' && board.charAt(4) == '1' && board.charAt(8) == '1') ||
@@ -77,6 +97,20 @@ public class TicTacToe {
 			(board.charAt(1) == '1' && board.charAt(4) == '1' && board.charAt(7) == '1') ||
 			(board.charAt(2) == '1' && board.charAt(5) == '1' && board.charAt(8) == '1') ||
 			(board.charAt(2) == '1' && board.charAt(4) == '1' && board.charAt(6) == '1')) {
+			decayBoard(movesMade);
+			potatoes.put(movesMade.get(movesMade.size() - 1), 0.0);
+			System.out.print("Player 1 wins! ");
+			movesMade = new ArrayList<String>();
+			return true;
+		}
+		// Sheldon wins.
+		if (board.substring(0, 3).equals("222") ||
+			board.substring(3,6).equals("222") ||
+			board.substring(6,9).equals("222")) {
+			increaseBoard(movesMade);
+			potatoes.put(board, 10.0); 
+			System.out.print("Sheldon wins! ");
+			movesMade = new ArrayList<String>();
 			return true;
 		}
 		if ((board.charAt(0) == '2' && board.charAt(4) == '2' && board.charAt(8) == '2') ||
@@ -84,6 +118,10 @@ public class TicTacToe {
 			(board.charAt(1) == '2' && board.charAt(4) == '2' && board.charAt(7) == '2') ||
 			(board.charAt(2) == '2' && board.charAt(5) == '2' && board.charAt(8) == '2') ||
 			(board.charAt(2) == '2' && board.charAt(4) == '2' && board.charAt(6) == '2')) {
+			increaseBoard(movesMade);
+			potatoes.put(board, 10.0);
+			System.out.print("Sheldon wins! ");
+			movesMade = new ArrayList<String>();
 			return true;
 		}
 		for (int i = 0; i < board.length(); i++) {
@@ -91,6 +129,9 @@ public class TicTacToe {
 				return false;
 			}
 			if (i == board.length() - 1) {
+				increaseBoard(movesMade);
+				potatoes.put(board, 10.0); 
+				movesMade = new ArrayList<String>();
 				return true;
 			}
 		}
@@ -98,8 +139,23 @@ public class TicTacToe {
 	}
 
 	private void legDay() {
-
+		System.out.println("Please wait while Sheldon does leg day.");
+		String boardState = "000000000";
+		Random rand = new Random();
+		for (int i = 0; i < 10000000; i++) {
+			int index = rand.nextInt(9);
+			while (boardState.charAt(index) != '0') {
+				index = rand.nextInt(9);
+			}
+			String newState = boardState.substring(0,index) + '1' + 
+									boardState.substring(index + 1);
+			boardState = response(newState);
+			if (gameOver(boardState)) {
+				boardState = "000000000";
+			}
+		}
 	}
+
 	public static void main(String[] argv) {
 		TicTacToe newGame = new TicTacToe();
 		String boardState = "000000000";
@@ -107,6 +163,11 @@ public class TicTacToe {
 		while (true) {
 			newGame.prompt(boardState);
 			index = StdIn.readInt();
+			System.out.println(index);
+			while (boardState.charAt(index) != '0') {
+				StdOut.println("Sorry, invalid input.");
+				index = StdIn.readInt();
+			}
 			String newState = boardState.substring(0,index) + '1' + 
 									boardState.substring(index + 1);
 			boardState = newGame.response(newState);
