@@ -40,7 +40,6 @@ public class TicTacToe {
 				max = weight;
 			}
 		}
-		System.out.println("Max: " + max);
 
 		Random rand = new Random();
 		int choice = rand.nextInt(count);
@@ -81,14 +80,15 @@ public class TicTacToe {
 		}
 	}
 
-	private boolean gameOver(String board) {
+	private boolean gameOver(String board, boolean legDay) {
 		// We win.
 		if (board.substring(0, 3).equals("111") || 
 			board.substring(3,6).equals("111") || 
 			board.substring(6,9).equals("111")) {	
 			decayBoard(movesMade);
-			potatoes.put(movesMade.get(movesMade.size() - 1), 0.0); 
-			System.out.print("Player 1 wins! ");
+			potatoes.put(movesMade.get(movesMade.size() - 1), 0.0);
+			if (legDay == false)  
+				System.out.println("Player 1 wins!");
 			movesMade = new ArrayList<String>();
 			return true;
 		}
@@ -99,7 +99,8 @@ public class TicTacToe {
 			(board.charAt(2) == '1' && board.charAt(4) == '1' && board.charAt(6) == '1')) {
 			decayBoard(movesMade);
 			potatoes.put(movesMade.get(movesMade.size() - 1), 0.0);
-			System.out.print("Player 1 wins! ");
+			if (legDay == false)  
+				System.out.println("Player 1 wins!");
 			movesMade = new ArrayList<String>();
 			return true;
 		}
@@ -109,7 +110,8 @@ public class TicTacToe {
 			board.substring(6,9).equals("222")) {
 			increaseBoard(movesMade);
 			potatoes.put(board, 10.0); 
-			System.out.print("Sheldon wins! ");
+			if (legDay == false)  
+				System.out.println("Sheldon wins!");
 			movesMade = new ArrayList<String>();
 			return true;
 		}
@@ -120,7 +122,8 @@ public class TicTacToe {
 			(board.charAt(2) == '2' && board.charAt(4) == '2' && board.charAt(6) == '2')) {
 			increaseBoard(movesMade);
 			potatoes.put(board, 10.0);
-			System.out.print("Sheldon wins! ");
+			if (legDay == false)  
+				System.out.println("Sheldon wins!");
 			movesMade = new ArrayList<String>();
 			return true;
 		}
@@ -132,6 +135,8 @@ public class TicTacToe {
 				increaseBoard(movesMade);
 				potatoes.put(board, 10.0); 
 				movesMade = new ArrayList<String>();
+				if (legDay == false)  
+					System.out.println("Cats game!");
 				return true;
 			}
 		}
@@ -150,7 +155,7 @@ public class TicTacToe {
 			String newState = boardState.substring(0,index) + '1' + 
 									boardState.substring(index + 1);
 			boardState = response(newState);
-			if (gameOver(boardState)) {
+			if (gameOver(boardState, true)) {
 				boardState = "000000000";
 			}
 		}
@@ -171,7 +176,7 @@ public class TicTacToe {
 			String newState = boardState.substring(0,index) + '1' + 
 									boardState.substring(index + 1);
 			boardState = newGame.response(newState);
-			if (newGame.gameOver(boardState)) {
+			if (newGame.gameOver(boardState, false)) {
 				StdOut.println("Game Over, let's play again!");
 				boardState = "000000000";
 			}
